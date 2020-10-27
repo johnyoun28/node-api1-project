@@ -17,14 +17,29 @@ app.get('/users', (req, res) => {
 })
 
 app.post('/users', (req, res) => {
-    const { name, bio } = req.body
-    if(!name || !bio) {
-        res.status(400).json({
-            message: "Please provide name and bio for the user."
+    const{ name, bio } = req.body
+    try {
+        if (!name || !bio) {
+            res.status(400).json({
+                message: "Please provide name and bio for the user."
+            })
+        } else {
+            const newUser = { id: generate(), name, bio }
+            users.push(newUser)
+            res.status(201).json(newUser)
+        }
+    } catch(error) {
+        res.status(500).json({
+            message: "There was an error while saving the user to the database" 
         })
-    } else {
-        const newUser = { id: generate(), name, bio }
-        users.push(newUser)
-        res.status(201).json(newUser)
     }
+})
+
+
+
+
+
+
+app.listen(PORT, () => {
+    console.log(`LISTENING ON PORT ${PORT}`)
 })
